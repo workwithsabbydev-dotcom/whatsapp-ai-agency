@@ -1,5 +1,6 @@
 import json
 from fastapi import APIRouter, Request, HTTPException, Query, BackgroundTasks
+from fastapi.responses import PlainTextResponse
 from app.core.config import settings
 from app.core.logging import logger
 from app.core.security import verify_webhook_signature
@@ -23,7 +24,7 @@ async def verify_webhook(
     """
     if mode == "subscribe" and token == settings.WEBHOOK_VERIFY_TOKEN:
         logger.info("WhatsApp Webhook verified successfully!")
-        return int(challenge)
+        return PlainTextResponse(challenge)
     
     logger.warning("Failed webhook verification attempt.")
     raise HTTPException(status_code=403, detail="Invalid verification token")
