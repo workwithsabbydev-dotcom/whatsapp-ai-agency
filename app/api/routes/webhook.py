@@ -41,12 +41,14 @@ async def receive_webhook(request: Request, background_tasks: BackgroundTasks):
     # 2. Parse and validate payload
     try:
         raw_payload = json.loads(body)
+        logger.debug(f"Raw webhook payload: {json.dumps(raw_payload, indent=2)}")
         data = WebhookPayload(**raw_payload)
     except Exception as e:
-        logger.error(f"Invalid Webhook Payload: {e}")
+        logger.error(f"Invalid Webhook Payload: {e}. Body: {body[:500]}")
         return {"status": "ok"}
         
     if data.object != "whatsapp_business_account":
+        logger.warning(f"Ignored webhook with object type: {data.object}")
         return {"status": "ok"}
 
     for entry in data.entry:
