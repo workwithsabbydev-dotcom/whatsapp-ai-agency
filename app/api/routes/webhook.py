@@ -41,7 +41,7 @@ async def receive_webhook(request: Request, background_tasks: BackgroundTasks):
     # 2. Parse and validate payload
     try:
         raw_payload = json.loads(body)
-        logger.debug(f"Raw webhook payload: {json.dumps(raw_payload, indent=2)}")
+        logger.info(f"Raw webhook payload: {json.dumps(raw_payload)}")
         data = WebhookPayload(**raw_payload)
     except Exception as e:
         logger.error(f"Invalid Webhook Payload: {e}. Body: {body[:500]}")
@@ -56,6 +56,11 @@ async def receive_webhook(request: Request, background_tasks: BackgroundTasks):
             value = change.value
             phone_number_id = value.metadata.phone_number_id
             
+            # Check for message status updates (sent, delivered, read)
+            if hasattr(value, 'statuses') and value.statuses:
+                logger.info(f"Received status update(s) for {len(value.statuses)} message(s).")
+                continue
+
             if not value.messages:
                 continue 
                 

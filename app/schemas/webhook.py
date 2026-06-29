@@ -29,6 +29,7 @@ class Value(BaseModel):
     messaging_product: str
     metadata: Metadata
     messages: Optional[List[Message]] = None
+    statuses: Optional[List[dict]] = None
 
 class Change(BaseModel):
     value: Value
