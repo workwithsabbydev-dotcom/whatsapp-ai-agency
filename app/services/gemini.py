@@ -11,8 +11,8 @@ class GeminiClient:
     """
     def __init__(self, api_key: str):
         self.api_key = api_key
-        # Defaulting to gemini-1.5-flash for general fast automated replies
-        self.url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={self.api_key}"
+        # Defaulting to gemini-2.5-flash-lite for general fast automated replies (lower cost/token usage)
+        self.url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key={self.api_key}"
         # 30 seconds for reading, 10 seconds for connecting
         self.timeout = httpx.Timeout(30.0, connect=10.0)
         self.max_retries = 3
